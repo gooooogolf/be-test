@@ -41,7 +41,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Response"
+                            "$ref": "#/definitions/interfaces.APIResponse"
                         }
                     }
                 }
@@ -67,7 +67,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.LoginRequest"
+                            "$ref": "#/definitions/domain.LoginRequest"
                         }
                     }
                 ],
@@ -75,19 +75,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.LoginResponse"
+                            "$ref": "#/definitions/domain.LoginResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.ErrorResponse"
+                            "$ref": "#/definitions/interfaces.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/main.ErrorResponse"
+                            "$ref": "#/definitions/interfaces.ErrorResponse"
                         }
                     }
                 }
@@ -115,19 +115,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.User"
+                            "$ref": "#/definitions/domain.User"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/main.ErrorResponse"
+                            "$ref": "#/definitions/interfaces.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.ErrorResponse"
+                            "$ref": "#/definitions/interfaces.ErrorResponse"
                         }
                     }
                 }
@@ -153,7 +153,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.RegisterRequest"
+                            "$ref": "#/definitions/domain.CreateUserRequest"
                         }
                     }
                 ],
@@ -161,19 +161,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/interfaces.APIResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.ErrorResponse"
+                            "$ref": "#/definitions/interfaces.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/main.ErrorResponse"
+                            "$ref": "#/definitions/interfaces.ErrorResponse"
                         }
                     }
                 }
@@ -181,55 +181,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string",
-                    "example": "Success"
-                }
-            }
-        },
-        "main.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string",
-                    "example": "Invalid request"
-                }
-            }
-        },
-        "main.LoginRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "user@example.com"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "password123"
-                }
-            }
-        },
-        "main.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                },
-                "user": {
-                    "$ref": "#/definitions/main.User"
-                }
-            }
-        },
-        "main.RegisterRequest": {
+        "domain.CreateUserRequest": {
             "type": "object",
             "required": [
                 "birthday",
@@ -241,40 +193,53 @@ const docTemplate = `{
             ],
             "properties": {
                 "birthday": {
-                    "type": "string",
-                    "example": "1990-01-01"
+                    "type": "string"
                 },
                 "email": {
-                    "type": "string",
-                    "example": "user@example.com"
+                    "type": "string"
                 },
                 "firstname": {
-                    "type": "string",
-                    "example": "John"
+                    "type": "string"
                 },
                 "lastname": {
-                    "type": "string",
-                    "example": "Doe"
+                    "type": "string"
                 },
                 "password": {
                     "type": "string",
-                    "example": "password123"
+                    "minLength": 6
                 },
                 "phone": {
-                    "type": "string",
-                    "example": "0812345678"
-                }
-            }
-        },
-        "main.Response": {
-            "type": "object",
-            "properties": {
-                "message": {
                     "type": "string"
                 }
             }
         },
-        "main.User": {
+        "domain.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/domain.User"
+                }
+            }
+        },
+        "domain.User": {
             "type": "object",
             "properties": {
                 "birthday": {
@@ -302,6 +267,23 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "interfaces.APIResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "interfaces.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -321,7 +303,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Go Chi API",
-	Description:      "A simple Go API with user authentication",
+	Description:      "A simple Go API with user authentication using Clean Architecture",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

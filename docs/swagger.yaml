@@ -1,57 +1,19 @@
 basePath: /
 definitions:
-  main.APIResponse:
-    properties:
-      data: {}
-      message:
-        example: Success
-        type: string
-    type: object
-  main.ErrorResponse:
-    properties:
-      error:
-        example: Invalid request
-        type: string
-    type: object
-  main.LoginRequest:
-    properties:
-      email:
-        example: user@example.com
-        type: string
-      password:
-        example: password123
-        type: string
-    required:
-    - email
-    - password
-    type: object
-  main.LoginResponse:
-    properties:
-      token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        type: string
-      user:
-        $ref: '#/definitions/main.User'
-    type: object
-  main.RegisterRequest:
+  domain.CreateUserRequest:
     properties:
       birthday:
-        example: "1990-01-01"
         type: string
       email:
-        example: user@example.com
         type: string
       firstname:
-        example: John
         type: string
       lastname:
-        example: Doe
         type: string
       password:
-        example: password123
+        minLength: 6
         type: string
       phone:
-        example: "0812345678"
         type: string
     required:
     - birthday
@@ -61,12 +23,24 @@ definitions:
     - password
     - phone
     type: object
-  main.Response:
+  domain.LoginRequest:
     properties:
-      message:
+      email:
         type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
     type: object
-  main.User:
+  domain.LoginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/domain.User'
+    type: object
+  domain.User:
     properties:
       birthday:
         type: string
@@ -85,13 +59,24 @@ definitions:
       updated_at:
         type: string
     type: object
+  interfaces.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  interfaces.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
 host: localhost:3333
 info:
   contact:
     email: support@swagger.io
     name: API Support
     url: http://www.swagger.io/support
-  description: A simple Go API with user authentication
+  description: A simple Go API with user authentication using Clean Architecture
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -110,7 +95,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Response'
+            $ref: '#/definitions/interfaces.APIResponse'
       summary: Hello World
       tags:
       - general
@@ -125,22 +110,22 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/main.LoginRequest'
+          $ref: '#/definitions/domain.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.LoginResponse'
+            $ref: '#/definitions/domain.LoginResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.ErrorResponse'
+            $ref: '#/definitions/interfaces.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/main.ErrorResponse'
+            $ref: '#/definitions/interfaces.ErrorResponse'
       summary: Login User
       tags:
       - auth
@@ -155,15 +140,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.User'
+            $ref: '#/definitions/domain.User'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/main.ErrorResponse'
+            $ref: '#/definitions/interfaces.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.ErrorResponse'
+            $ref: '#/definitions/interfaces.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Get Current User
@@ -180,22 +165,22 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/main.RegisterRequest'
+          $ref: '#/definitions/domain.CreateUserRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/interfaces.APIResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.ErrorResponse'
+            $ref: '#/definitions/interfaces.ErrorResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/main.ErrorResponse'
+            $ref: '#/definitions/interfaces.ErrorResponse'
       summary: Register User
       tags:
       - auth
