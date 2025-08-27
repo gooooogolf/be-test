@@ -67,8 +67,8 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	query := `INSERT INTO users (email, password, firstname, lastname, phone, birthday) VALUES (?, ?, ?, ?, ?, ?)`
 	result, err := db.Exec(query, req.Email, string(hashedPassword), req.FirstName, req.LastName, req.Phone, birthday)
 	if err != nil {
-		if err.Error() == "UNIQUE constraint failed: users.email" || 
-		   strings.Contains(err.Error(), "UNIQUE constraint failed") {
+		if err.Error() == "UNIQUE constraint failed: users.email" ||
+			strings.Contains(err.Error(), "UNIQUE constraint failed") {
 			w.WriteHeader(http.StatusConflict)
 			json.NewEncoder(w).Encode(ErrorResponse{Error: "Email already exists"})
 			return

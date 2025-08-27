@@ -231,3 +231,33 @@ To regenerate Swagger documentation after API changes:
 ```bash
 swag init
 ```
+
+## Testing
+
+This project includes comprehensive testing scripts to validate all API functionality.
+
+### Quick Testing
+```bash
+# Make scripts executable (first time only)
+chmod +x *.sh
+
+# Run basic API tests
+./test_apis.sh
+
+# Run advanced tests with edge cases
+./advanced_test.sh
+
+# Clean test data for fresh testing
+./cleanup_test.sh
+```
+
+### Test Coverage
+- ✅ All API endpoints (GET, POST)
+- ✅ Authentication flows (register, login, protected routes)
+- ✅ Error handling (400, 401, 404, 409)
+- ✅ JWT token validation
+- ✅ Input validation and edge cases
+- ✅ Concurrent request handling
+- ✅ Performance testing
+
+For detailed testing documentation, see [TESTING.md](TESTING.md).
